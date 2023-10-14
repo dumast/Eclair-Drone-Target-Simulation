@@ -13,7 +13,7 @@ public class TrackingParent : MonoBehaviour
     private GetTime getTimeScript;
 
     [SerializeField]
-    private GameObject target;
+    private Rigidbody target;
     [SerializeField]
     private float i = 1f;
 
@@ -33,15 +33,12 @@ public class TrackingParent : MonoBehaviour
             time = getTimeScript.time;
         }
 
-        velocity = (target.transform.position - pos) / Time.deltaTime;
-        pos = target.transform.position;
+        velocity = target.velocity;
 
-        var targetPosX = (target.transform.position.x - joint.transform.position.x) + time * velocity.x;
-        var targetPosZ = (target.transform.position.z - joint.transform.position.z) + time * velocity.z;
-        var targetPosY = (target.transform.position.y - joint.transform.position.y) - joint.transform.position.y;
+        var targetPosX = target.transform.position.x - joint.transform.position.x + Mathf.Abs(time) * velocity.x;
+        var targetPosZ = target.transform.position.z - joint.transform.position.z + Mathf.Abs(time) * velocity.z;
 
         float yaw = Mathf.Atan(targetPosX / targetPosZ) * 180 / Mathf.PI;
-        // float pitch = Mathf.Sign(targetPos.x) * Mathf.Sign(targetPos.y + Mathf.Abs(this.gameObject.transform.position.y) ) * Mathf.Abs(Mathf.Atan((targetPos.y + Mathf.Abs(this.gameObject.transform.position.y)) / Mathf.Sqrt(Mathf.Pow(targetPos.x, 2) + Mathf.Pow(targetPos.z, 2))) * 180 / Mathf.PI);
         this.gameObject.transform.localRotation = Quaternion.Euler(0, yaw, 0);
     }
 }

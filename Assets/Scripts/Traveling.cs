@@ -6,27 +6,19 @@ public class Traveling : MonoBehaviour
 {
     [SerializeField]    
     private float speed;
+    private Rigidbody rb;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey("left")){
-            this.gameObject.transform.position = transform.position + new Vector3(-speed, 0, 0);
-        }
-        if (Input.GetKey("right")){
-            this.gameObject.transform.position = transform.position + new Vector3(speed, 0, 0);
-        }
-        if (Input.GetKey("up")){
-            this.gameObject.transform.position = transform.position + new Vector3(0, 0, speed);
-        }
-        if (Input.GetKey("down")){
-            this.gameObject.transform.position = transform.position + new Vector3(0, 0, -speed);
-        }
+        var movement = new Vector3(Input.GetAxis("Horizontal"), 0,Input.GetAxis("Vertical"));
+        rb.velocity = movement * speed;
     }
 }

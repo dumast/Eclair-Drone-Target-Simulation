@@ -6,7 +6,7 @@ public class GetTime : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject target;
+    private Rigidbody target;
     [SerializeField]
     private GameObject gun;
 
@@ -24,7 +24,7 @@ public class GetTime : MonoBehaviour
     private float K; // drone Z velocity
 
     [SerializeField]
-    private float J; // Bullet Speed
+    public float J; // Bullet Speed
 
 
     Vector3 pos, velocity;
@@ -42,27 +42,27 @@ void Awake()
 // Update is called once per frame
 void Update()
 {
-    velocity = (target.transform.position - pos) / Time.deltaTime;
     pos = target.transform.position;
 
     A = target.transform.position.y; // target Y position 
-    B = velocity.y; // target Y velocity
+    B = target.velocity.y; // target Y velocity
     C = gun.transform.position.y; // drone Y position
     D = target.transform.position.x; // target X position
-    E = velocity.x; // target X velocity
+    E = target.velocity.x; // target X velocity
     F = gun.transform.position.x; // drone X position
     G = target.transform.position.z; // target Z position
-    H = velocity.z; // target Z velocity
+    H = target.velocity.z; // target Z velocity
     K = gun.transform.position.z; // drone Z position
 
     time =
-    Mathf.Abs(((-1 / 2 * Mathf.Sqrt(
-        Mathf.Pow((2 * A * B - 2 * B * C + 2 * D * E - 2 * E * F + 2 * G * H - 2 * H * K), 2)
+    (-1 / 2 * Mathf.Sqrt(
+        Mathf.Pow(2 * A * B - 2 * B * C + 2 * D * E - 2 * E * F + 2 * G * H - 2 * H * K, 2)
             - 4 * (Mathf.Pow(B, 2) + Mathf.Pow(E, 2) + Mathf.Pow(H, 2) - Mathf.Pow(J, 2))
             * (Mathf.Pow(A, 2)
             - 2 * A * C + Mathf.Pow(C, 2) + Mathf.Pow(D, 2) - 2 * D * F + Mathf.Pow(F, 2) + Mathf.Pow(G, 2) - 2 * G * K + Mathf.Pow(K, 2))
-            ) - A * B + B * C - D * E + E * F - G * H + H * K))
-            / (Mathf.Pow(B, 2) + Mathf.Pow(E, 2) + Mathf.Pow(H, 2) - Mathf.Pow(J, 2)));
+            ) - A * B + B * C - D * E + E * F - G * H + H * K)
+            / (Mathf.Pow(B, 2) + Mathf.Pow(E, 2) + Mathf.Pow(H, 2) - Mathf.Pow(J, 2));
 
+    Debug.Log(time);
 }
 }

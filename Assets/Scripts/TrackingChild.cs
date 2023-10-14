@@ -11,7 +11,7 @@ public class TrackingChild : MonoBehaviour
     private GetTime getTimeScript;
 
     [SerializeField]
-    private GameObject target;
+    private Rigidbody target;
 
     private float i = 1f;
 
@@ -31,14 +31,18 @@ public class TrackingChild : MonoBehaviour
             time = getTimeScript.time;
         }
 
-        velocity = (target.transform.position - pos) / Time.deltaTime;
-        pos = target.transform.position;
+        velocity = target.velocity;
 
-        var targetPosX = (target.transform.position.x - this.gameObject.transform.position.x) + time * velocity.x;
-        var targetPosZ = (target.transform.position.z - this.gameObject.transform.position.z) + time * velocity.z;
-        var targetPosY = (target.transform.position.y - this.gameObject.transform.position.y) + time * velocity.y + 1/2 * 9.81 * Mathf.Pow(time, 2) ;
 
-        float pitch = -Mathf.Sign(targetPosZ) * Mathf.Sign(targetPosY) * Mathf.Abs(Mathf.Atan((targetPosY) / Mathf.Sqrt(Mathf.Pow(targetPosZ, 2) + Mathf.Pow(targetPosX, 2))) * 180 / Mathf.PI);
+        var distance = Mathf.Sqrt(Mathf.Pow(target.transform.position.x - this.gameObject.transform.position.x, 2) + Mathf.Pow(target.transform.position.z - this.gameObject.transform.position.z, 2) + Mathf.Pow(target.transform.position.y - this.gameObject.transform.position.y, 2));
+        var gravTime = distance / getTimeScript.J;
+
+        var targetPosX = target.transform.position.x - this.gameObject.transform.position.x + time * velocity.x;
+        var targetPosZ = target.transform.position.z - this.gameObject.transform.position.z + time * velocity.z;
+        var targetPosY = target.transform.position.y - this.gameObject.transform.position.y + time * velocity.y + 1/2f * 9.81f * Mathf.Pow(gravTime + Mathf.Max(time, 0), 2) ;
+        // var targetPosY = target.transform.position.y - this.gameObject.transform.position.y + time * velocity.y;
+
+        float pitch = -Mathf.Sign(targetPosZ) * Mathf.Sign(targetPosY) * Mathf.Abs(Mathf.Atan(targetPosY / Mathf.Sqrt(Mathf.Pow(targetPosZ, 2) + Mathf.Pow(targetPosX, 2))) * 180f / Mathf.PI);
         this.gameObject.transform.localRotation = Quaternion.Euler(pitch, 0, 0);
     }
 }
